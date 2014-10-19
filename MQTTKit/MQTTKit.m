@@ -247,6 +247,8 @@ static void on_unsubscribe(struct mosquitto *mosq, void *obj, int message_id)
     if (self.cafile && mosquitto_tls_set(mosq, [self.cafile cStringUsingEncoding:NSUTF8StringEncoding], [self.capath cStringUsingEncoding:NSUTF8StringEncoding], [self.certfile cStringUsingEncoding:NSUTF8StringEncoding], [self.keyfile cStringUsingEncoding:NSUTF8StringEncoding] , NULL)) {
         NSLog(@"error setting up TLS");
     }
+    // add tls insecure set
+    mosquitto_tls_insecure_set(mosq, self.tlsInsecure);
 
     mosquitto_connect(mosq, cstrHost, self.port, self.keepAlive);
     

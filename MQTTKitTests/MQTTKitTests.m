@@ -239,6 +239,8 @@ NSString *topic;
     client.cafile = cafile;
 
     [self publishWithClient:client];
+    
+}
 - (void)testTwoClients
 {
     MQTTClient *subscriber = [[MQTTClient alloc] initWithClientId:@"MQTTKitTests-sub"];

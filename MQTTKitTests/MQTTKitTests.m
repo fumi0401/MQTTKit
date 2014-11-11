@@ -233,6 +233,51 @@ NSString *topic;
     client.cafile = cafile;
 
     [self publishWithClient:client];
+    
+}
+- (void)testTwoClients
+{
+    MQTTClient *subscriber = [[MQTTClient alloc] initWithClientId:@"MQTTKitTests-sub"];
+
+    dispatch_semaphore_t subscribed = dispatch_semaphore_create(0);
+    NSLog(@"connecting subscriber...");
+    [subscriber connectToHost:kHost
+            completionHandler:^(MQTTConnectionReturnCode code) {
+                NSLog(@"subscriber connected");
+                NSLog(@"subscriber subscribing...");
+                [subscriber subscribe:topic
+                              withQos:AtMostOnce
+                    completionHandler:^(NSArray *grantedQos) {
+                        NSLog(@"subscriber subscribed");
+                        dispatch_semaphore_signal(subscribed);
+                    }];
+            }];
+    XCTAssertTrue(gotSignal(subscribed, 4));
+
+    NSString *text = [NSString stringWithFormat:@"Hello, MQTT %d", arc4random()];
+    dispatch_semaphore_t received = dispatch_semaphore_create(0);
+    subscriber.messageHandler = ^(MQTTMessage *message) {
+        XCTAssertTrue([text isEqualToString:message.payloadString]);
+        dispatch_semaphore_signal(received);
+    };
+
+    MQTTClient *publisher = [[MQTTClient alloc] initWithClientId:@"MQTTKitTests-pub"];
+    dispatch_semaphore_t published = dispatch_semaphore_create(0);
+    [publisher connectToHost:kHost
+           completionHandler:^(MQTTConnectionReturnCode code) {
+               [publisher publishString:text toTopic:topic
+                                withQos:AtMostOnce
+                                 retain:YES
+                      completionHandler:^(int mid) {
+                          dispatch_semaphore_signal(published);
+                      }];
+           }];
+    XCTAssertTrue(gotSignal(published, 4));
+
+    XCTAssertTrue(gotSignal(received, 4));
+
+    [publisher disconnectWithCompletionHandler:nil];
+    [subscriber disconnectWithCompletionHandler:nil];
 }
 
 - (void)testUnsubscribe

@@ -18,6 +18,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.compiler_flags = '-DWITH_TLS'
 
-  s.dependency 'OpenSSL-Universal', '~> 1.0'
+  s.dependency pod 'OpenSSL-Universal', :podspec => 'https://raw.github.com/krzyzanowskim/OpenSSL/master/OpenSSL-Universal.podspec'
 
 end

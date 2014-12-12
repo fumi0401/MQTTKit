@@ -54,7 +54,7 @@ Contributors:
 #include <openssl/conf.h>
 #include <openssl/engine.h>
 #include <openssl/err.h>
-#include <tls_mosq.h>
+#include "tls_mosq.h"
 #endif
 
 #ifdef WITH_BROKER
@@ -71,7 +71,7 @@ Contributors:
 #    include <libwebsockets.h>
 #  endif
 #else
-#  include <read_handle.h>
+#  include "read_handle.h"
 #endif
 
 #include <logging_mosq.h>

@@ -4,12 +4,12 @@ Copyright (c) 2009-2014 Roger Light <roger@atchoo.org>
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
 and Eclipse Distribution License v1.0 which accompany this distribution.
-
+ 
 The Eclipse Public License is available at
    http://www.eclipse.org/legal/epl-v10.html
 and the Eclipse Distribution License is available at
   http://www.eclipse.org/org/documents/edl-v10.php.
-
+ 
 Contributors:
    Roger Light - initial implementation and documentation.
 */
@@ -90,8 +90,6 @@ void _mosquitto_check_keepalive(struct mosquitto *mosq)
 	int rc;
 #endif
 
-  printf("%s\n",mosq->keepalive);
-
 	assert(mosq);
 #if defined(WITH_BROKER) && defined(WITH_BRIDGE)
 	/* Check if a lazy bridge should be timed out due to idle. */
@@ -164,7 +162,7 @@ uint16_t _mosquitto_mid_generate(struct mosquitto *mosq)
 	if(mosq->last_mid == 0) mosq->last_mid++;
 	mid = mosq->last_mid;
 	pthread_mutex_unlock(&mosq->mid_mutex);
-
+	
 	return mid;
 }
 
@@ -246,7 +244,7 @@ int mosquitto_topic_matches_sub(const char *sub, const char *topic, bool *result
 		if(sub[spos] == topic[tpos]){
 			if(tpos == tlen-1){
 				/* Check for e.g. foo matching foo/# */
-				if(spos == slen-3
+				if(spos == slen-3 
 						&& sub[spos+1] == '/'
 						&& sub[spos+2] == '#'){
 					*result = true;
@@ -332,3 +330,4 @@ FILE *_mosquitto_fopen(const char *path, const char *mode)
 	return fopen(path, mode);
 #endif
 }
+

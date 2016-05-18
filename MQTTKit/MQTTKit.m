@@ -10,7 +10,7 @@
 #import "MQTTKit.h"
 #import "mosquitto.h"
 
-#if 1 // set to 1 to enable logs
+#if 0 // set to 1 to enable logs
 
 #define LogDebug(frmt, ...) NSLog(frmt, ##__VA_ARGS__);
 

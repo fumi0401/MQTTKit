@@ -542,6 +542,7 @@ int mosquitto_disconnect(struct mosquitto *mosq)
 	pthread_mutex_unlock(&mosq->state_mutex);
 
 	if(mosq->sock == INVALID_SOCKET) return MOSQ_ERR_NO_CONN;
+	printf("----------mosquitto_disconnect called\n");
 	return _mosquitto_send_disconnect(mosq);
 }
 
@@ -1173,6 +1174,7 @@ int mosquitto_loop_write(struct mosquitto *mosq, int max_packets)
 	 * to keep up. */
 	for(i=0; i<max_packets; i++){
 		rc = _mosquitto_packet_write(mosq);
+		printf("----------call from loop_write rc:%d\n",rc);
 		if(rc || errno == EAGAIN || errno == COMPAT_EWOULDBLOCK){
 			return _mosquitto_loop_rc_handle(mosq, rc);
 		}

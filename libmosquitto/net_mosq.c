@@ -4,12 +4,12 @@ Copyright (c) 2009-2014 Roger Light <roger@atchoo.org>
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
 and Eclipse Distribution License v1.0 which accompany this distribution.
- 
+
 The Eclipse Public License is available at
    http://www.eclipse.org/legal/epl-v10.html
 and the Eclipse Distribution License is available at
   http://www.eclipse.org/org/documents/edl-v10.php.
- 
+
 Contributors:
    Roger Light - initial implementation and documentation.
 */
@@ -188,6 +188,7 @@ int _mosquitto_packet_queue(struct mosquitto *mosq, struct _mosquitto_packet *pa
 	}
 
 	if(mosq->in_callback == false && mosq->threaded == false){
+    printf("----------call from packet_queue\n");
 		return _mosquitto_packet_write(mosq);
 	}else{
 		return MOSQ_ERR_SUCCESS;
@@ -310,7 +311,7 @@ int _mosquitto_try_connect(struct mosquitto *mosq, const char *host, uint16_t po
 	for(rp = ainfo; rp != NULL; rp = rp->ai_next){
 		*sock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 		if(*sock == INVALID_SOCKET) continue;
-		
+
 		if(rp->ai_family == PF_INET){
 			((struct sockaddr_in *)rp->ai_addr)->sin_port = htons(port);
 		}else if(rp->ai_family == PF_INET6){
@@ -819,7 +820,7 @@ int _mosquitto_packet_write(struct mosquitto *mosq)
 			}
 			pthread_mutex_unlock(&mosq->callback_mutex);
 		}else if(((packet->command)&0xF0) == DISCONNECT){
-			/* FIXME what cleanup needs doing here? 
+			/* FIXME what cleanup needs doing here?
 			 * incoming/outgoing messages? */
 			_mosquitto_socket_close(mosq);
 

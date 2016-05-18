@@ -10,7 +10,7 @@
 #import "MQTTKit.h"
 #import "mosquitto.h"
 
-#if 0 // set to 1 to enable logs
+#if 1 // set to 1 to enable logs
 
 #define LogDebug(frmt, ...) NSLog(frmt, ##__VA_ARGS__);
 
@@ -234,13 +234,13 @@ static void on_unsubscribe(struct mosquitto *mosq, void *obj, int message_id)
 
     const char *cstrHost = [self.host cStringUsingEncoding:NSASCIIStringEncoding];
     const char *cstrUsername = NULL, *cstrPassword = NULL;
-    
+
     if (self.username)
         cstrUsername = [self.username cStringUsingEncoding:NSUTF8StringEncoding];
-    
+
     if (self.password)
         cstrPassword = [self.password cStringUsingEncoding:NSUTF8StringEncoding];
-    
+
     // FIXME: check for errors
     mosquitto_username_pw_set(mosq, cstrUsername, cstrPassword);
     mosquitto_reconnect_delay_set(mosq, self.reconnectDelay, self.reconnectDelayMax, self.reconnectExponentialBackoff);
@@ -251,7 +251,7 @@ static void on_unsubscribe(struct mosquitto *mosq, void *obj, int message_id)
     mosquitto_tls_insecure_set(mosq, self.tlsInsecure);
 
     mosquitto_connect(mosq, cstrHost, self.port, self.keepAlive);
-    
+
     dispatch_async(self.queue, ^{
         LogDebug(@"start mosquitto loop on %@", self.queue);
         mosquitto_loop_forever(mosq, -1, 1);
